@@ -19,6 +19,7 @@ config();
       database: process.env.DB_NAME,
       synchronize: true,
       logging: true,
+      ssl: true 
     }),
     UserModule,
   ],
