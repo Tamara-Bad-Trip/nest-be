@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Req, Res } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { UpdateResult } from 'typeorm';
@@ -18,6 +18,18 @@ export class UserController {
     @Get()
     findAll() {
         return this.userService.findAllUser();
+    }
+
+    @Get('/google')
+    @UseGuards(AuthGuard('google'))
+    async googleLogin() {}
+
+    @Get('/google/callback')
+    @UseGuards(AuthGuard('google'))
+    async callback(@Req() req, @Res() res) {
+        const jwt = await this.userService.login(req.user);
+        res.set('authorization', jwt.accessToken);
+        res.json(req.user);
     }
 
     @Get(':id')
