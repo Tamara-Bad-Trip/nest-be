@@ -5,9 +5,11 @@ import { UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/user.login-dto';
+import { ConsoleLogger } from '@nestjs/common';
 
 @Controller('user')
 export class UserController {
+    private readonly logger = new ConsoleLogger(UserController.name);
     constructor(private readonly userService: UserService) {}
 
     @Post()
@@ -20,13 +22,24 @@ export class UserController {
         return this.userService.findAllUser();
     }
 
+    @Get('/twitter')
+    @UseGuards(AuthGuard('twitter'))
+    async twitterLogin() {}
+
+    @Get('/twitter/callback')
+    @UseGuards(AuthGuard('twitter'))
+    async twitterCallback(@Req() req, @Res() res) {
+        const userData = JSON.stringify(req.user, undefined, 2);
+        res.json(userData);
+    }
+
     @Get('/google')
     @UseGuards(AuthGuard('google'))
     async googleLogin() {}
 
     @Get('/google/callback')
     @UseGuards(AuthGuard('google'))
-    async callback(@Req() req, @Res() res) {
+    async googleCallback(@Req() req, @Res() res) {
         const jwt = await this.userService.login(req.user);
         res.set('authorization', jwt.accessToken);
         res.json(req.user);

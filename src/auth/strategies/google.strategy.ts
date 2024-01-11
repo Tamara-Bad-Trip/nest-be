@@ -13,6 +13,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
         });
     }
     async validate(accessToken: string, refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
-        done(null, profile, accessToken);
+        const user = { ...profile, accessToken, refreshToken };
+        done(null, user);
     }
 }

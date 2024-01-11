@@ -4,9 +4,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from 'src/user/user.module';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
-import { LocalStrategy } from './local.strategy';
-import { GoogleStrategy } from './google.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { TwitterStrategy } from './strategies/twitter.strategy';
 
 @Module({
     imports: [
@@ -21,7 +22,7 @@ import { GoogleStrategy } from './google.strategy';
         PassportModule,
         forwardRef(() => UserModule),
     ],
-    providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
+    providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy, TwitterStrategy],
     exports: [AuthService],
 })
 export class AuthModule {}
