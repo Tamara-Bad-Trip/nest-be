@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
+    app.enableCors();
     app.use(passport.initialize());
     app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: true }));
 
