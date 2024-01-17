@@ -1,4 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Req, Res } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    UseGuards,
+    Request,
+    Req,
+    Res,
+    HttpException,
+    HttpStatus,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { UpdateResult } from 'typeorm';
@@ -13,8 +27,18 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     @Post()
-    create(@Body() createUserDto: CreateUserDto) {
-        return this.userService.createUser(createUserDto);
+    async create(@Body() createUserDto: CreateUserDto) {
+        try {
+            const user = await this.userService.createUser(createUserDto);
+            return { user };
+        } catch (error) {
+            if (error.message === 'Email already exists') {
+                throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
+            } else {
+                console.error('Error creating user:', error);
+                throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
     }
 
     @Get()
