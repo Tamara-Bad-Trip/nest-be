@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { AuthService } from 'src/auth/auth.service';
@@ -35,9 +35,17 @@ export class UserService {
     }
 
     async login(loginUser: User): Promise<LoginUserDto> {
-        const accessToken: string = await this.authService.generateJWT(loginUser);
-        const { username } = loginUser;
-        return { username, accessToken };
+        try {
+            const accessToken: string = await this.authService.generateJWT(loginUser);
+            const { username } = loginUser;
+            return { username, accessToken };
+        } catch (error) {
+            if (error.message.includes('There is no user with email') || error.message.includes('password is wrong')) {
+                throw new HttpException('Wrong email or password', HttpStatus.UNAUTHORIZED);
+            } else {
+                throw error;
+            }
+        }
     }
 
     findAllUser(): Promise<User[]> {
