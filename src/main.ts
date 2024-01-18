@@ -10,7 +10,7 @@ async function bootstrap() {
     app.use(passport.initialize());
     app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: true }));
 
-    await app.listen(3000);
+    await app.listen(3001);
 }
 
 bootstrap();
