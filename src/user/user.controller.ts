@@ -53,8 +53,13 @@ export class UserController {
     @Get('/twitter/callback')
     @UseGuards(AuthGuard('twitter'))
     async twitterCallback(@Req() req, @Res() res) {
-        const userData = JSON.stringify(req.user, undefined, 2);
-        res.json(userData);
+        const jwt = await this.userService.login(req.user);
+        const { profile } = req.user;
+        res.redirect(
+            process.env.NODE_ENV === 'production'
+                ? `${process.env.FE_PROD}/sign-in?accessToken=${jwt.accessToken}&username=${profile?.displayName}`
+                : `${process.env.FE_DEVELOP}/sign-in?accessToken=${jwt.accessToken}&username=${profile?.displayName}`,
+        );
     }
 
     @Get('/google')
@@ -64,9 +69,14 @@ export class UserController {
     @Get('/google/callback')
     @UseGuards(AuthGuard('google'))
     async googleCallback(@Req() req, @Res() res) {
+        const { displayName } = req.user;
         const jwt = await this.userService.login(req.user);
         res.set('authorization', jwt.accessToken);
-        res.json(req.user);
+        res.redirect(
+            process.env.NODE_ENV === 'production'
+                ? `${process.env.FE_PROD}/sign-in?accessToken=${jwt.accessToken}&username=${displayName}`
+                : `${process.env.FE_DEVELOP}/sign-in?accessToken=${jwt.accessToken}&username=${displayName}`,
+        );
     }
 
     @Get(':id')

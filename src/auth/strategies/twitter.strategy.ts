@@ -9,7 +9,7 @@ export class TwitterStrategy extends PassportStrategy(Strategy, 'twitter') {
             clientID: process.env.TWITTER_CLIENT_ID,
             clientSecret: process.env.TWITTER_SECRET,
             clientType: 'confidential',
-            callbackURL: `http://localhost:3000/user/twitter/callback`,
+            callbackURL: `http://localhost:3001/user/twitter/callback`,
             scope: ['users.read', 'tweet.read', 'tweet.write', 'offline.access'],
         });
     }
