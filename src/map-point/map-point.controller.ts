@@ -49,10 +49,10 @@ export class MapPointController {
         }
     }
 
-    @Delete(':id')
-    async remove(@Param('id', ParseIntPipe) pointId: number) {
+    @Delete()
+    async remove(@Body() { id }: { id: number }) {
         try {
-            await this.mapPointService.removeMapPoint(pointId);
+            await this.mapPointService.removeMapPoint(id);
             return { success: true };
         } catch (error) {
             console.error('Error deleting point:', error);

@@ -11,8 +11,10 @@ export class MapPointService {
 
     async createMapPoint(createMapPoint: CreateMapPointDto): Promise<MapPoint> {
         const newPoint: MapPoint = new MapPoint();
-        newPoint.geolocation.lat = createMapPoint.geolocation.lat;
-        newPoint.geolocation.lng = createMapPoint.geolocation.lng;
+        newPoint.geolocation = {
+            lat: createMapPoint.geolocation.lat,
+            lng: createMapPoint.geolocation.lng,
+        };
         newPoint.creatorName = createMapPoint.creatorName;
         newPoint.creatorEmail = createMapPoint.creatorEmail;
         newPoint.description = createMapPoint.description;
@@ -30,7 +32,7 @@ export class MapPointService {
     }
 
     async findPointsByEmail(email: string): Promise<MapPoint[]> {
-        const query = `SELECT * FROM public.points WHERE "creatorEmail" = $1`;
+        const query = `SELECT * FROM public.map_point WHERE "creatorEmail" = $1`;
         return this.mapPointRepository.query(query, [email]);
     }
 }
