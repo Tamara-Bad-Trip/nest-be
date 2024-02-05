@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsAlphanumeric, IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
 
 const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%*?&]{8,20}$/;
@@ -5,11 +6,19 @@ const passwordRegEx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*d)(?=.*[@$!%*?&])[A-Za-zd@$!%
 export class CreateUserDto {
     @IsNotEmpty()
     @MinLength(3, { message: 'Username must have atleast 3 characters.' })
+    @ApiProperty({
+        default: 'John Doe',
+    })
     @IsAlphanumeric(null, {
         message: 'Username does not allow other than alpha numeric chars.',
     })
     readonly username: string;
 
+    @ApiProperty({
+        type: String,
+        description: 'User email address',
+        example: 'john.doe@example.com',
+    })
     @IsNotEmpty()
     @IsEmail(null, { message: 'Please provide valid Email.' })
     readonly email: string;
@@ -21,6 +30,9 @@ export class CreateUserDto {
       one lowercase letter, 
       one number and 
       one special character`,
+    })
+    @ApiProperty({
+        default: 'Pass123$',
     })
     readonly password: string;
     static email: any;

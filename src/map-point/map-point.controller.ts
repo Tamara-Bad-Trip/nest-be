@@ -1,24 +1,16 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Param,
-    UseGuards,
-    HttpException,
-    HttpStatus,
-    ParseIntPipe,
-    Put,
-    Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus, Put, Delete } from '@nestjs/common';
 import { MapPointService } from './map-point.service';
 import { CreateMapPointDto } from './dto/create-map-point.dto';
 import { UpdateMapPointDto } from './dto/update-map-point.dto';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Map-point')
+@ApiBearerAuth()
 @Controller('map-points')
 export class MapPointController {
     constructor(private readonly mapPointService: MapPointService) {}
 
+    @ApiBody({ type: CreateMapPointDto })
     @Post()
     async create(@Body() createMapPointDto: CreateMapPointDto) {
         try {

@@ -14,18 +14,22 @@ import {
     HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiBody, ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { UpdateResult } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/user.login-dto';
 import { ConsoleLogger } from '@nestjs/common';
+import { SignInUserDto } from './dto/sign-in.dto';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
     private readonly logger = new ConsoleLogger(UserController.name);
     constructor(private readonly userService: UserService) {}
 
+    @ApiBody({ type: CreateUserDto })
     @Post()
     async create(@Body() createUserDto: CreateUserDto) {
         try {
@@ -42,6 +46,7 @@ export class UserController {
     }
 
     @Get()
+    @ApiBearerAuth()
     findAll() {
         return this.userService.findAllUser();
     }
@@ -50,6 +55,7 @@ export class UserController {
     @UseGuards(AuthGuard('twitter'))
     async twitterLogin() {}
 
+    @ApiExcludeEndpoint()
     @Get('/twitter/callback')
     @UseGuards(AuthGuard('twitter'))
     async twitterCallback(@Req() req, @Res() res) {
@@ -66,6 +72,7 @@ export class UserController {
     @UseGuards(AuthGuard('google'))
     async googleLogin() {}
 
+    @ApiExcludeEndpoint()
     @Get('/google/callback')
     @UseGuards(AuthGuard('google'))
     async googleCallback(@Req() req, @Res() res) {
@@ -80,10 +87,12 @@ export class UserController {
     }
 
     @Get(':id')
+    @ApiBearerAuth()
     findOne(@Param('id') id: string) {
         return this.userService.viewUser(+id);
     }
 
+    @ApiBody({ type: SignInUserDto })
     @Post('/sign-in')
     @UseGuards(AuthGuard('local'))
     async login(@Request() req): Promise<LoginUserDto> {
@@ -91,12 +100,14 @@ export class UserController {
     }
 
     @Patch()
+    @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     updateUserById(@Request() req, @Body() updateUserDto: UpdateUserDto): Promise<UpdateResult> {
         return this.userService.updateUser(req.user.id, updateUserDto);
     }
 
     @Delete()
+    @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
     deleteUser(@Request() req): Promise<void> {
         return this.userService.removeUser(req.user.id);
