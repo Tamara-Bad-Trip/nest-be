@@ -8,10 +8,7 @@ import { MapPointsModule } from './map-point/map-point.module';
 
 import { join } from 'path';
 
-import { config } from 'dotenv';
-
-config();
-
+import { MailModule } from './mail/mail.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -36,6 +33,7 @@ config();
         UserModule,
         AuthModule,
         MapPointsModule,
+        MailModule,
     ],
 })
 export class AppModule {}

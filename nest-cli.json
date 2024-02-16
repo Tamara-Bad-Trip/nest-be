@@ -3,6 +3,6 @@
     "sourceRoot": "src",
     "compilerOptions": {
         "esModuleInterop": true,
-        "assets": ["common/envs/*"]
+        "assets": ["common/envs/*", "**/*.hbs"]
     }
 }
