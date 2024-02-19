@@ -19,5 +19,5 @@ export class ContactUsRequestDto {
 
     @IsString()
     @IsNotEmpty()
-    question: string;
+    message: string;
 }

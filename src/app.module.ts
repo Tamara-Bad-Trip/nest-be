@@ -5,10 +5,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { MapPointsModule } from './map-point/map-point.module';
+import { MailModule } from './mail/mail.module';
 
 import { join } from 'path';
-
-import { MailModule } from './mail/mail.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
